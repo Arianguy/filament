@@ -1,0 +1,1 @@
+<img src="{{ asset('images/Riy_log.png') }}" alt="Riyaz Logo" class="h-10"/>
