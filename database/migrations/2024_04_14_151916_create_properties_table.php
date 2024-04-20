@@ -30,7 +30,7 @@ return new class extends Migration
             $table->decimal('areasqmter', 10, 2);
             $table->decimal('commonarea', 10, 2);
             $table->decimal('areasqfeet', 10, 2);
-            $table->foreignId('ownerid')
+            $table->foreignId('owner_id')
                 ->constrained('owners')
                 ->cascadeOnDelete();
             $table->unsignedBigInteger("purchasevalue");
