@@ -13,8 +13,8 @@ class Owner extends Model
         'name', 'eid', 'eidexp', 'nationality', 'email', 'mobile', 'nakheelno', 'is_visible'
     ];
 
-    public function properties(): HasMany
+    public function properties()
     {
-        return $this->HasMany(Property::class);
+        return $this->hasMany(Property::class);
     }
 }

@@ -15,7 +15,7 @@ class Property extends Model
         'ownerid', 'purchasevalue', 'dewapremiseno', 'dewaacno', 'status', 'salesdeed'
     ];
 
-    public function owner(): BelongsTo
+    public function owner()
     {
         return $this->belongsTo(Owner::class);
     }
