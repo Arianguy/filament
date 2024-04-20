@@ -37,7 +37,6 @@ class PropertyResource extends Resource
                 TextColumn::make('ownerid'),
                 TextColumn::make('owner.name'),
                 TextColumn::make('plotno'),
-
             ])
             ->filters([
                 //
