@@ -16,29 +16,31 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('class');
             $table->string('type');
-            $table->date('purchasedate');
-            $table->string('titledeedno')->unique();
-            $table->string('mortgage');
+            $table->date('purchase_date');
+            $table->string('title_deed_no')->unique();
+            $table->string('mortgage_status');
             $table->string('community');
-            $table->unsignedBigInteger('plotno');
-            $table->unsignedBigInteger('bldgno');
-            $table->string('bldgname');
-            $table->unsignedBigInteger('propertyno');
-            $table->string('floordetail');
-            $table->decimal('suitearea', 10, 2);
-            $table->decimal('balconyarea', 10, 2);
-            $table->decimal('areasqmter', 10, 2);
-            $table->decimal('commonarea', 10, 2);
-            $table->decimal('areasqfeet', 10, 2);
+            $table->unsignedBigInteger('plot_no');
+            $table->unsignedBigInteger('bldg_no');
+            $table->string('bldg_name');
+            $table->unsignedBigInteger('property_no');
+            $table->string('floor_detail');
+            $table->decimal('suite_area', 10, 2);
+            $table->decimal('balcony_area', 10, 2);
+            $table->decimal('area_sq_mter', 10, 2);
+            $table->decimal('common_area', 10, 2);
+            $table->decimal('area_sq_feet', 10, 2);
             $table->foreignId('owner_id')
                 ->constrained('owners')
                 ->cascadeOnDelete();
-            $table->unsignedBigInteger("purchasevalue");
-            $table->unsignedBigInteger("dewapremiseno")->nullable();
-            $table->unsignedBigInteger("dewaacno")->nullable();
+            $table->unsignedBigInteger("purchase_value");
+            $table->unsignedBigInteger("dewa_premise_no")
+                ->nullable()
+                ->unique();
+            $table->unsignedBigInteger("dewa_account_no")->nullable();
             $table->string('status');
             $table->string('salesdeed');
-            $table->boolean('is_visible')->default(false);
+            $table->boolean('is_visible')->default(true);
             $table->timestamps();
         });
     }
