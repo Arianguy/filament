@@ -49,7 +49,9 @@ class PropertyResource extends Resource
                             ->schema([
                                 TextInput::make('name')->required(),
                                 Select::make('owner_id')
-                                    ->relationship('owner', 'name')->required()->native(false),    // Relationship select values
+                                    ->relationship('owner', 'name')  // Relationship select values
+                                    ->required()
+                                    ->native(false),
 
                                 Section::make('Purchase Details')->icon('heroicon-o-banknotes') // Purchase Details Section
                                     ->schema([
@@ -151,12 +153,18 @@ class PropertyResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('bldgname'),
-                TextColumn::make('purchasedate'),
-                TextColumn::make('owner_id'),
+                TextColumn::make('name')->searchable()->sortable()->Toggleable(),
+                TextColumn::make('class')->searchable()->sortable()->Toggleable('true'),
+                TextColumn::make('purchase_date')->label('Purchase Date')->date()->sortable(),
+                TextColumn::make('purchase_value'),
                 TextColumn::make('owner.name')->label('Owner'), // Access owner's name through the relationship
-                TextColumn::make('plotno'),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'LEASED' => 'success',
+                        'VACANT' => 'warning',
+                        'SOLD' => 'danger',
+                    }),
             ])
             ->filters([
                 //
