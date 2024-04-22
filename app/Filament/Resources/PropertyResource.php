@@ -36,7 +36,7 @@ class PropertyResource extends Resource
 {
     protected static ?string $model = Property::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bolt';
+    protected static ?string $navigationIcon = 'heroicon-s-building-office-2';
     protected static ?string $navigationGroup = 'Masters';
     protected static ?string $navigationLabel = 'Properties';
     public static function form(Form $form): Form
@@ -51,9 +51,8 @@ class PropertyResource extends Resource
                                 Select::make('owner_id')
                                     ->relationship('owner', 'name')->required()->native(false),    // Relationship select values
 
-                                Section::make('Purchase Details')->icon('heroicon-m-shopping-bag') // Purchase Details Section
+                                Section::make('Purchase Details')->icon('heroicon-o-banknotes') // Purchase Details Section
                                     ->schema([
-
                                         TextInput::make('title_deed_no')->required()->label('Title Deed No'),
                                         DatePicker::make('purchase_date')->required()->label('Purchase Date'),
                                         select::make('mortgage_status')
@@ -68,10 +67,9 @@ class PropertyResource extends Resource
                                             ->numeric(),
                                         FileUpload::make('salesdeed')->label('Attach Sales deed')
                                             ->acceptedFileTypes(['image/*', 'application/pdf'])
-                                            ->columnSpan(2)
-                                    ]),
+                                    ])->columns(5),
 
-                                Section::make('Property Detail')->icon('heroicon-m-shopping-bag') // Property Detail Section
+                                Section::make('Property Detail')->icon('heroicon-o-identification') // Property Detail Section
                                     ->schema([
                                         select::make('class')
                                             ->options([
