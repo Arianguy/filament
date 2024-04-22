@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Support\Markdown;
 use Filament\Resources\Resource;
+use PhpParser\Node\Expr\Ternary;
 use Filament\Forms\Components\Group;
 use function Laravel\Prompts\select;
 use Filament\Forms\Components\Select;
@@ -19,18 +20,20 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
 
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Tables\Actions\DeleteBulkAction;
 use App\Filament\Resources\PropertyResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PropertyResource\RelationManagers;
+use App\Filament\Resources\PropertyResource\Pages\EditProperty;
 use App\Filament\Resources\PropertyResource\Pages\CreateProperty;
 use App\Filament\Resources\PropertyResource\Pages\ListProperties;
-use App\Filament\Resources\PropertyResource\Pages\EditProperty;
 
 class PropertyResource extends Resource
 {
@@ -167,7 +170,24 @@ class PropertyResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                TernaryFilter::make('is_visible')
+                    ->label('Visible')
+                    ->boolean()
+                    ->truelabel('Visible')
+                    ->falselabel('Hidden')
+                    ->native(false),
+
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'Leased' => 'Leased',
+                        'Vacant' => 'Vacant',
+                        'Sold' => 'Sold'
+                    ])
+                    ->native(false),
+
+                SelectFilter::make('owner')
+                    ->relationship('owner', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
