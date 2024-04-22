@@ -2,17 +2,35 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PropertyResource\Pages;
-use App\Filament\Resources\PropertyResource\RelationManagers;
-use App\Models\Property;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use App\Models\Property;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Support\Markdown;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Group;
+use function Laravel\Prompts\select;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Section;
+use Filament\Pages\Actions\EditAction;
+use Filament\Forms\Components\Fieldset;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Tables\Actions\DeleteBulkAction;
+use App\Filament\Resources\PropertyResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\PropertyResource\RelationManagers;
+use App\Filament\Resources\PropertyResource\Pages\CreateProperty;
+use App\Filament\Resources\PropertyResource\Pages\ListProperties;
+use App\Filament\Resources\PropertyResource\Pages\EditProperty;
 
 class PropertyResource extends Resource
 {
@@ -25,7 +43,109 @@ class PropertyResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Group::make()   // Grouping
+                    ->schema([
+                        Section::make() // Section
+                            ->schema([
+                                TextInput::make('name')->required(),
+                                Select::make('owner_id')
+                                    ->relationship('owner', 'name')->required()->native(false),    // Relationship select values
+
+                                Section::make('Purchase Details')->icon('heroicon-m-shopping-bag') // Purchase Details Section
+                                    ->schema([
+
+                                        TextInput::make('title_deed_no')->required()->label('Title Deed No'),
+                                        DatePicker::make('purchase_date')->required()->label('Purchase Date'),
+                                        select::make('mortgage_status')
+                                            ->options([
+                                                'YES' => 'YES',
+                                                'NO' => 'NO',
+                                            ])->native(false)
+                                            ->required(),
+                                        TextInput::make('purchase_value')
+                                            ->required()
+                                            ->label('Purchase Value')
+                                            ->numeric(),
+                                        FileUpload::make('salesdeed')->label('Attach Sales deed')
+                                            ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->columnSpan(2)
+                                    ]),
+
+                                Section::make('Property Detail')->icon('heroicon-m-shopping-bag') // Property Detail Section
+                                    ->schema([
+                                        select::make('class')
+                                            ->options([
+                                                'STUDIO' => 'STUDIO',
+                                                '1 BHK' => '1 BHK',
+                                                '2 BHK' => '2 BHK',
+                                                'OFFICE' => 'OFFICE',
+                                                'WAREHOUSE' => 'WAREHOUSE'
+                                            ])->native(false)
+                                            ->required(),
+                                        select::make('type')
+                                            ->options([
+                                                'Residencial' => 'Residencial',
+                                                'Comercial' => 'Commercial',
+                                            ])->native(false)
+                                            ->required(),
+                                        TextInput::make('community')->required(),
+                                        TextInput::make('bldg_name')->required()->label('Building Name'),
+                                        TextInput::make('plot_no')->required()->label('Plot No'),
+                                        TextInput::make('bldg_no')->required()->label('Building No'),
+                                        TextInput::make('property_no')->required()->label('Property No'),
+
+                                        Fieldset::make('Area Details')
+                                            ->schema([
+                                                select::make('floor_detail')->label('Floor Details')
+                                                    ->options([
+                                                        'Basement' => 'Basement',
+                                                        'Ground Floor' => 'Ground Floor',
+                                                        'First Floor' => 'First Floor',
+                                                        'Second Floor' => 'Second Floor',
+                                                        'Third Floor' => 'Third Floor',
+                                                        'Fourth Floor' => 'Fourth Floor',
+                                                        'Ten Floor' => 'Ten Floor',
+                                                        'Eleven Floor' => 'Eleven Floor',
+                                                    ])->native(false)
+                                                    ->required(),
+                                                TextInput::make('suite_area')
+                                                    ->required()
+                                                    ->label('Suite Area')
+                                                    ->numeric()
+                                                    ->step('0.01'),
+                                                TextInput::make('balcony_area')
+                                                    ->required()
+                                                    ->label('Balcony Area')
+                                                    ->numeric()
+                                                    ->step('0.01'),
+                                                TextInput::make('area_sq_mter')
+                                                    ->required()
+                                                    ->label('Sq Meter Area')
+                                                    ->numeric()
+                                                    ->step('0.01'),
+                                                TextInput::make('common_area')
+                                                    ->required()
+                                                    ->label('Common Area')
+                                                    ->numeric()
+                                                    ->step('0.01'),
+                                                TextInput::make('area_sq_feet')
+                                                    ->required()
+                                                    ->label('Sq Feet Area')
+                                                    ->numeric()
+                                                    ->step('0.01'),
+                                            ])->columns(3),
+                                        TextInput::make('dewa_premise_no')->label('DEWA Premise No'),
+                                        TextInput::make('dewa_account_no')->label('DEWA Account No'),
+                                    ])->columns(4),
+                                select::make('status')
+                                    ->options([
+                                        'VACANT' => 'VACANT',
+                                        'LEASED' => 'LEASED',
+                                        'SOLD' => 'SOLD',
+                                    ])->native(false)
+                                    ->required(),
+                            ])->columns(2)
+                    ])->columnSpanFull(),
             ]);
     }
 
@@ -34,13 +154,11 @@ class PropertyResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name'),
-                TextColumn::make('plotno'),
+                TextColumn::make('bldgname'),
+                TextColumn::make('purchasedate'),
+                TextColumn::make('owner_id'),
                 TextColumn::make('owner.name')->label('Owner'), // Access owner's name through the relationship
-                TextColumn::make('owner.eid')->label('Owner EID'), // Access owner's name through the relationship
-                TextColumn::make('dewaacno'),
                 TextColumn::make('plotno'),
-                TextColumn::make('areasqfeet'),
-                TextColumn::make('purchasevalue'),
             ])
             ->filters([
                 //
