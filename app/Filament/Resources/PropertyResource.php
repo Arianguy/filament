@@ -34,9 +34,13 @@ class PropertyResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name'),
-                TextColumn::make('owner_id'),
-                TextColumn::make('owner.name')->label('Owner'), // Access owner's name through the relationship
                 TextColumn::make('plotno'),
+                TextColumn::make('owner.name')->label('Owner'), // Access owner's name through the relationship
+                TextColumn::make('owner.eid')->label('Owner EID'), // Access owner's name through the relationship
+                TextColumn::make('dewaacno'),
+                TextColumn::make('plotno'),
+                TextColumn::make('areasqfeet'),
+                TextColumn::make('purchasevalue'),
             ])
             ->filters([
                 //
