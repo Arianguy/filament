@@ -160,7 +160,7 @@ class PropertyResource extends Resource
                 TextColumn::make('name')->searchable()->sortable()->Toggleable(),
                 TextColumn::make('class')->searchable()->sortable()->Toggleable('true'),
                 TextColumn::make('purchase_date')->label('Purchase Date')->date()->sortable(),
-                TextColumn::make('purchase_value'),
+                TextColumn::make('purchase_value')->sortable()->Toggleable(),
                 TextColumn::make('owner.name')->label('Owner'), // Access owner's name through the relationship
                 TextColumn::make('status')
                     ->badge()

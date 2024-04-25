@@ -16,14 +16,16 @@ return new class extends Migration
             $table->foreignId('tenant_id')
                 ->constrained('tenants')
                 ->cascadedOnDelete();
-            $table->integer('property_id');
+            $table->integer('property_id')
+                ->constrained('properties')
+                ->cascadedOnDelete();
             $table->date('cstart');
             $table->date('cend');
             $table->decimal('amount', 10, 2);
-            $table->decimal('secamount', 10, 2);
+            $table->decimal('sec_amt', 10, 2);
             $table->string('ejari');
             $table->string('validity');
-            $table->string('contractimg');
+            $table->string('contract_img');
             $table->timestamps();
         });
     }

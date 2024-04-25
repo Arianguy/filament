@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('fname');
             $table->string('eid')->unique();
             $table->date('eidexp');
             $table->string('nationality');
@@ -24,8 +24,9 @@ return new class extends Migration
             $table->date('passexp');
             $table->string('eidfront');
             $table->string('eidback');
-            $table->string('passfront');
-            $table->string('passback');
+            $table->string('frontpass');
+            $table->string('backpass');
+            $table->string('visa_img');
             $table->timestamps();
         });
     }

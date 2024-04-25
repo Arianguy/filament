@@ -10,6 +10,6 @@ class Tenant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'eid', 'eidexp', 'nationality', 'email', 'mobile', 'visa', 'passportno', 'passexp', 'eidfront', 'eidback', 'passfront', 'passback'
+        'fname', 'eid', 'eidexp', 'nationality', 'email', 'mobile', 'visa', 'passportno', 'passexp', 'eidfront', 'eidback', 'frontpass', 'backpass', 'visa_img'
     ];
 }
