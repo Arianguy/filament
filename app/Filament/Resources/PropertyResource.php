@@ -8,6 +8,7 @@ use App\Models\Property;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Support\Markdown;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use PhpParser\Node\Expr\Ternary;
 use Filament\Forms\Components\Group;
@@ -19,8 +20,8 @@ use Filament\Pages\Actions\EditAction;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
 
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -190,7 +191,10 @@ class PropertyResource extends Resource
                     ->relationship('owner', 'name')
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('email');
             $table->string('mobile');
             $table->string('nakheelno');
-            $table->boolean('is_visible')->default(false);
             $table->timestamps();
         });
     }

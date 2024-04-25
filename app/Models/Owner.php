@@ -10,7 +10,7 @@ class Owner extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'eid', 'eidexp', 'nationality', 'email', 'mobile', 'nakheelno', 'is_visible'
+        'name', 'eid', 'eidexp', 'nationality', 'email', 'mobile', 'nakheelno',
     ];
 
     public function properties()
