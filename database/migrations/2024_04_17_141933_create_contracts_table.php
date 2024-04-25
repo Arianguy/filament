@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('tenant_id')
                 ->constrained('tenants')
                 ->cascadedOnDelete();
-            $table->integer('property_id')
+            $table->foreignId('property_id')
                 ->constrained('properties')
                 ->cascadedOnDelete();
             $table->date('cstart');
