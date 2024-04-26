@@ -61,26 +61,31 @@ class TenantResource extends Resource
                                     ->schema([
                                         Forms\Components\FileUpload::make('eidfront')->label('Attach EID Front')
                                             ->required()
+                                            ->directory('tenantdocs')
                                             ->multiple()
                                             ->image()
                                             ->imageEditor()
                                             ->acceptedFileTypes(['image/*', 'application/pdf']),
                                         Forms\Components\FileUpload::make('eidback')->label('Attach EID Back')
+                                            ->directory('tenantdocs')
                                             ->image()
                                             ->imageEditor()
                                             ->acceptedFileTypes(['image/*', 'application/pdf']),
                                         Forms\Components\FileUpload::make('frontpass')->label('Attach Passport Front Page')
                                             ->required()
+                                            ->directory('tenantdocs')
                                             ->multiple()
                                             ->image()
                                             ->imageEditor()
                                             ->acceptedFileTypes(['image/*', 'application/pdf']),
                                         Forms\Components\FileUpload::make('backpass')->label('Attach Passport Back Page')
+                                            ->directory('tenantdocs')
                                             ->image()
                                             ->imageEditor()
                                             ->acceptedFileTypes(['image/*', 'application/pdf']),
                                         Forms\Components\FileUpload::make('visa_img')->label('Attach Visa Page')
                                             ->required()
+                                            ->directory('tenantdocs')
                                             ->multiple()
                                             ->image()
                                             ->imageEditor()
