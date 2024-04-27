@@ -33,28 +33,32 @@ class TenantResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('fname')->label('Full Name')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->autocapitalize('characters')
+                                    ->maxLength(30),
                                 Forms\Components\TextInput::make('eid')->label('EID No')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->unique()
+                                    ->mask('999-9999-9999999-9')
+                                    ->placeholder('xxx-xxxx-xxxxxxx-x'),
                                 Forms\Components\DatePicker::make('eidexp')->label('EID Expiry Date')
                                     ->required(),
                                 Forms\Components\TextInput::make('nationality')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(15),
                                 Forms\Components\TextInput::make('email')->label('Email ID')
                                     ->email()
                                     ->required()
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('mobile')->label('Mobile No')->placeholder('050....')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->mask('9999999999')
+                                    ->placeholder('050xxxxxxx'),
                                 Forms\Components\TextInput::make('visa')->label('Visa Company Name')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(70),
                                 Forms\Components\TextInput::make('passportno')->label('Passport No')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(12),
                                 Forms\Components\DatePicker::make('passexp')->label('Passport Expiry Date')
                                     ->required(),
                                 Section::make('Attachemnts')->icon('heroicon-o-paper-clip') // Purchase Details Section
@@ -62,34 +66,39 @@ class TenantResource extends Resource
                                         Forms\Components\FileUpload::make('eidfront')->label('Attach EID Front')
                                             ->required()
                                             ->directory('tenantdocs')
-                                            ->multiple()
+                                            //->multiple()
                                             ->image()
                                             ->imageEditor()
-                                            ->acceptedFileTypes(['image/*', 'application/pdf']),
+                                            ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->downloadable(),
                                         Forms\Components\FileUpload::make('eidback')->label('Attach EID Back')
                                             ->directory('tenantdocs')
                                             ->image()
                                             ->imageEditor()
-                                            ->acceptedFileTypes(['image/*', 'application/pdf']),
+                                            ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->downloadable(),
                                         Forms\Components\FileUpload::make('frontpass')->label('Attach Passport Front Page')
                                             ->required()
                                             ->directory('tenantdocs')
-                                            ->multiple()
+                                            //->multiple()
                                             ->image()
                                             ->imageEditor()
-                                            ->acceptedFileTypes(['image/*', 'application/pdf']),
+                                            ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->downloadable(),
                                         Forms\Components\FileUpload::make('backpass')->label('Attach Passport Back Page')
                                             ->directory('tenantdocs')
                                             ->image()
                                             ->imageEditor()
-                                            ->acceptedFileTypes(['image/*', 'application/pdf']),
+                                            ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->downloadable(),
                                         Forms\Components\FileUpload::make('visa_img')->label('Attach Visa Page')
                                             ->required()
                                             ->directory('tenantdocs')
-                                            ->multiple()
+                                            // ->multiple()
                                             ->image()
                                             ->imageEditor()
-                                            ->acceptedFileTypes(['image/*', 'application/pdf']),
+                                            ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->downloadable(),
                                     ])->columns(5)
                             ])->columns(3)
                     ])->columnSpanFull(),
@@ -120,16 +129,16 @@ class TenantResource extends Resource
                 Tables\Columns\TextColumn::make('passexp')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('eidfront')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('eidback')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('frontpass')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('backpass')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('visa_img')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('eidfront')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('eidback')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('frontpass')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('backpass')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('visa_img')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

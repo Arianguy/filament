@@ -35,9 +35,10 @@ class ContractResource extends Resource
                                     ->relationship('Tenant', 'fname')
                                     ->native(false)
                                     ->required(),
-                                Forms\Components\TextInput::make('property_id')
-                                    ->required()
-                                    ->numeric(),
+                                Forms\Components\Select::make('property_id')
+                                    ->relationship('Property', 'name')
+                                    ->native(false)
+                                    ->required(),
                                 Forms\Components\DatePicker::make('cstart')
                                     ->required(),
                                 Forms\Components\DatePicker::make('cend')
@@ -55,9 +56,13 @@ class ContractResource extends Resource
                                     ->required()
                                     ->maxLength(255),
                                 Forms\Components\FileUpload::make('contract_img')->label('Attach Contract Copy')
-                                    ->acceptedFileTypes(['image/*', 'application/pdf'])
                                     ->required()
-                                    ->multiple(),
+                                    ->directory('Contracts')
+                                    // ->multiple()
+                                    ->image()
+                                    ->imageEditor()
+                                    ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                    ->downloadable(),
                             ])->columns(2)
                     ])->columnSpanFull(),
             ]);

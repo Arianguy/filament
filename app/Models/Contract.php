@@ -18,4 +18,9 @@ class Contract extends Model
     {
         return $this->belongsTo(Tenant::class);
     }
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
 }
