@@ -42,7 +42,7 @@ class TenantResource extends Resource
                                     ->maxLength(30),
                                 Forms\Components\TextInput::make('eid')->label('EID No')
                                     ->required()
-                                    ->unique()
+                                    ->unique(ignoreRecord: true)
                                     ->mask('999-9999-9999999-9')
                                     ->placeholder('xxx-xxxx-xxxxxxx-x'),
                                 Forms\Components\DatePicker::make('eidexp')->label('EID Expiry Date')
@@ -115,6 +115,9 @@ class TenantResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('fname')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('eid')
