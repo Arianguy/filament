@@ -5,11 +5,17 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Tenant;
+use App\Rules\AllCaps;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rule;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TenantResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -32,8 +38,7 @@ class TenantResource extends Resource
                         Section::make() // Section
                             ->schema([
                                 Forms\Components\TextInput::make('fname')->label('Full Name')
-                                    ->required()
-                                    ->autocapitalize('characters')
+                                    ->rules(['required', new AllCaps(),])
                                     ->maxLength(30),
                                 Forms\Components\TextInput::make('eid')->label('EID No')
                                     ->required()
@@ -44,6 +49,7 @@ class TenantResource extends Resource
                                     ->required(),
                                 Forms\Components\TextInput::make('nationality')
                                     ->required()
+                                    ->rules(['required', new AllCaps(),])
                                     ->maxLength(15),
                                 Forms\Components\TextInput::make('email')->label('Email ID')
                                     ->email()
