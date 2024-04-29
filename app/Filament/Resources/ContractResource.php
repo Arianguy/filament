@@ -72,11 +72,9 @@ class ContractResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('tenant.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('tenant.fname')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('property_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('property.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('cstart')
                     ->date()

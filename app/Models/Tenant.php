@@ -12,4 +12,9 @@ class Tenant extends Model
     protected $fillable = [
         'fname', 'eid', 'eidexp', 'nationality', 'email', 'mobile', 'visa', 'passportno', 'passexp', 'eidfront', 'eidback', 'frontpass', 'backpass', 'visa_img'
     ];
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
+    }
 }
