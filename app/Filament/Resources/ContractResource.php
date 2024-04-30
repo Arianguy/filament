@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Contract;
+use App\Models\Property;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
@@ -25,6 +26,8 @@ class ContractResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $vacantProperties = Property::where('status', 'Vacant')->pluck('name', 'id')->toArray();
+
         return $form
             ->schema([
                 Group::make()   // Grouping
@@ -33,10 +36,13 @@ class ContractResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('tenant_id')
                                     ->relationship('Tenant', 'fname')
+                                    ->searchable()
+                                    ->preload()
                                     ->native(false)
                                     ->required(),
                                 Forms\Components\Select::make('property_id')
-                                    ->relationship('Property', 'name')
+                                    ->options($vacantProperties) // Use the filtered options array
+                                    // ->relationship('Property', 'name')
                                     ->native(false)
                                     ->required(),
                                 Forms\Components\DatePicker::make('cstart')
