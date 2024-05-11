@@ -9,6 +9,7 @@ use App\Models\Property;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\Builder;
@@ -64,6 +65,7 @@ class ContractResource extends Resource
                                 Forms\Components\FileUpload::make('contract_img')->label('Attach Contract Copy')
                                     ->required()
                                     ->directory('Contracts')
+                                    ->openable()
                                     // ->multiple()
                                     ->image()
                                     ->imageEditor()
@@ -98,6 +100,11 @@ class ContractResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('validity')
                     ->searchable(),
+
+
+
+
+
                 Tables\Columns\TextColumn::make('contract_img')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -114,6 +121,11 @@ class ContractResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('Download')
+                    ->color('info')
+                    ->icon('heroicon-o-rectangle-stack'),
+
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
