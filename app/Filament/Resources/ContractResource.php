@@ -9,6 +9,8 @@ use App\Models\Property;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+
+use App\Livewire\DownloadContract;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
@@ -101,10 +103,6 @@ class ContractResource extends Resource
                 Tables\Columns\TextColumn::make('validity')
                     ->searchable(),
 
-
-
-
-
                 Tables\Columns\TextColumn::make('contract_img')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -121,12 +119,8 @@ class ContractResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Action::make('Download')
-                    ->color('info')
-                    ->icon('heroicon-o-rectangle-stack'),
-
-
             ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

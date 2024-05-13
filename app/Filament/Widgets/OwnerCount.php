@@ -41,7 +41,10 @@ class OwnerCount extends BaseWidget
                 ->descriptionIcon('heroicon-o-sparkles')
                 ->color('Success'),
 
-            $stat = Stat::make('Total Amount for Valid Contracts', Contract::where('validity', 'YES')->sum('amount')),
+            $stat = Stat::make(
+                'Total Amount for Valid Contracts',
+                number_format(Contract::where('validity', 'YES')->sum('amount'), 2)
+            ),
 
 
         ];
