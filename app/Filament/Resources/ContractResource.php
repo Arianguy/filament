@@ -9,20 +9,31 @@ use App\Models\Property;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-
-use App\Livewire\DownloadContract;
-use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ContractResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ContractResource\RelationManagers;
+use Carbon\Carbon;
 
+class ContractHelper
+{
+    public static function calculateRemainingDays(Contract $contract): string
+    {
+        $today = Carbon::today();
+        $endDate = Carbon::parse($contract->cend);
+
+        if ($endDate->isBefore($today)) {
+            return 'Expired';
+        } else {
+            $diffInDays = abs($endDate->diffInDays($today)); // Use abs() for absolute value
+            return number_format($diffInDays);
+        }
+    }
+}
 class ContractResource extends Resource
 {
     protected static ?string $model = Contract::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Transations';
     protected static ?string $navigationLabel = 'Contracts';
@@ -102,7 +113,16 @@ class ContractResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('validity')
                     ->searchable(),
-
+                Tables\Columns\TextColumn::make('days_remaining')
+                    ->label('Days Balance')
+                    ->getStateUsing(function (Contract $record) {
+                        return ContractHelper::calculateRemainingDays($record);
+                    })
+                    ->badge(function (string $state) {
+                        if ($state === 'Expired') {
+                            return 'danger';
+                        }
+                    }),
                 Tables\Columns\TextColumn::make('contract_img')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -114,6 +134,7 @@ class ContractResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->recordUrl(null)
             ->filters([
                 //
             ])
