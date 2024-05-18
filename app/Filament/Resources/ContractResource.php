@@ -46,45 +46,60 @@ class ContractResource extends Resource
             ->schema([
                 Group::make()   // Grouping
                     ->schema([
+
                         Section::make() // Section
                             ->schema([
-                                Forms\Components\Select::make('tenant_id')
-                                    ->relationship('Tenant', 'fname')
-                                    ->searchable()
-                                    ->preload()
-                                    ->native(false)
-                                    ->required(),
-                                Forms\Components\Select::make('property_id')
-                                    ->options($vacantProperties) // Use the filtered options array
-                                    // ->relationship('Property', 'name')
-                                    ->native(false)
-                                    ->required(),
-                                Forms\Components\DatePicker::make('cstart')
-                                    ->required(),
-                                Forms\Components\DatePicker::make('cend')
-                                    ->required(),
-                                Forms\Components\TextInput::make('amount')
-                                    ->required()
-                                    ->numeric(),
-                                Forms\Components\TextInput::make('sec_amt')
-                                    ->required()
-                                    ->numeric(),
-                                Forms\Components\TextInput::make('ejari')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('validity')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\FileUpload::make('contract_img')->label('Attach Contract Copy')
-                                    ->required()
-                                    ->directory('Contracts')
-                                    ->openable()
-                                    // ->multiple()
-                                    ->image()
-                                    ->imageEditor()
-                                    ->acceptedFileTypes(['image/*', 'application/pdf'])
-                                    ->downloadable(),
-                            ])->columns(2)
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Contract Number')
+                                    ->default(function () {
+                                        // Generate unique name with "RIY-" prefix and 10-digit timestamp
+                                        $timestamp = time();
+                                        $uniqueNumber = str_pad(rand(0, pow(10, 6) - 1), 6, '0', STR_PAD_LEFT);
+                                        return "RIY-$uniqueNumber";
+                                    })
+                                    ->readonly()
+                                    ->unique(ignoreRecord: true),
+
+                                Section::make() // Section
+                                    ->schema([
+                                        Forms\Components\Select::make('tenant_id')
+                                            ->relationship('Tenant', 'fname')
+                                            ->searchable()
+                                            ->preload()
+                                            ->native(false)
+                                            ->required(),
+                                        Forms\Components\Select::make('property_id')
+                                            ->options($vacantProperties) // Use the filtered options array
+                                            // ->relationship('Property', 'name')
+                                            ->native(false)
+                                            ->required(),
+                                        Forms\Components\DatePicker::make('cstart')
+                                            ->required(),
+                                        Forms\Components\DatePicker::make('cend')
+                                            ->required(),
+                                        Forms\Components\TextInput::make('amount')
+                                            ->required()
+                                            ->numeric(),
+                                        Forms\Components\TextInput::make('sec_amt')
+                                            ->required()
+                                            ->numeric(),
+                                        Forms\Components\TextInput::make('ejari')
+                                            ->required()
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('validity')
+                                            ->required()
+                                            ->maxLength(255),
+                                        Forms\Components\FileUpload::make('contract_img')->label('Attach Contract Copy')
+                                            ->required()
+                                            ->directory('Contracts')
+                                            ->openable()
+                                            // ->multiple()
+                                            ->image()
+                                            ->imageEditor()
+                                            ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->downloadable(),
+                                    ])->columns(2)
+                            ])->columns(8)
                     ])->columnSpanFull(),
             ]);
     }
@@ -93,10 +108,15 @@ class ContractResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Contract No')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('tenant.fname')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('property.name')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('cstart')
                     ->date()
                     ->sortable(),
@@ -109,8 +129,7 @@ class ContractResource extends Resource
                 Tables\Columns\TextColumn::make('sec_amt')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ejari')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('ejari'),
                 Tables\Columns\TextColumn::make('validity')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('days_remaining')
@@ -118,9 +137,15 @@ class ContractResource extends Resource
                     ->getStateUsing(function (Contract $record) {
                         return ContractHelper::calculateRemainingDays($record);
                     })
-                    ->badge(function (string $state) {
+                    ->badge()
+                    ->color(function (string $state): string {
                         if ($state === 'Expired') {
                             return 'danger';
+                        } elseif ($state > 30) {
+                            return 'success';
+                        } else {
+                            // Optional: Define a default color for other states
+                            return 'primary'; // Example default color
                         }
                     }),
                 Tables\Columns\TextColumn::make('contract_img')

@@ -11,7 +11,7 @@ class Contract extends Model
     use HasFactory;
     protected $fillable = [
 
-        'tenant_id', 'property_id', 'cstart', 'cend', 'amount', 'sec_amt', 'ejari', 'validity', 'contract_img'
+        'tenant_id', 'name', 'property_id', 'cstart', 'cend', 'amount', 'sec_amt', 'ejari', 'validity', 'contract_img'
     ];
 
     public function tenant(): BelongsTo

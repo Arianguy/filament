@@ -146,7 +146,8 @@ class PropertyResource extends Resource
                                         'LEASED' => 'LEASED',
                                         'SOLD' => 'SOLD',
                                     ])->native(false)
-                                    ->required(),
+                                    ->required()
+                                    ->default('VACANT'),
                             ])->columns(2)
                     ])->columnSpanFull(),
             ]);

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('property_id')
                 ->constrained('properties')
                 ->cascadedOnDelete();
+            $table->string('name');
             $table->date('cstart');
             $table->date('cend');
             $table->decimal('amount', 10, 2);
