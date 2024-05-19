@@ -17,17 +17,17 @@ return new class extends Migration
                 ->constrained('contracts')
                 ->cascadedOnDelete();
             $table->string('paytype');
-            $table->string('cheqno');
-            $table->string('cheqbank');
+            $table->string('cheqno')->nullable();
+            $table->string('cheqbank')->nullable();
             $table->decimal('cheqamt', 10, 2);
             $table->date('cheqdate');
             $table->string('trans_type');
             $table->string('narration');
-            $table->date('depositdate');
-            $table->string('cheqstatus');
-            $table->string('depositac');
-            $table->string('remarks');
-            $table->string('cheq_img');
+            $table->date('depositdate')->nullable();
+            $table->string('cheqstatus')->nullable();
+            $table->string('depositac')->nullable();
+            $table->string('remarks')->nullable();
+            $table->string('cheq_img')->nullable();
             $table->timestamps();
         });
     }

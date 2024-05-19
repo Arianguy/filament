@@ -51,7 +51,7 @@ class TransactionResource extends Resource
                                 Section::make('Payment Detail')->icon('heroicon-o-banknotes') // Payment Detail Section
                                     ->schema([
                                         Forms\Components\select::make('cheqbank')
-                                            ->label('Bank Name')
+                                            ->label('Cheque Bank Name')
                                             ->options([
                                                 'Mashreq Bank' => 'Mashreq Bank',
                                                 'Mashreq Neo' => 'Mashreq Neo',
@@ -75,10 +75,11 @@ class TransactionResource extends Resource
                                             ->label('Cheque Date')
                                             ->required(),
                                         Forms\Components\TextInput::make('cheqamt')
-                                            ->label('Amount')
+                                            ->label('Cheque Amount')
                                             ->required()
                                             ->numeric(2),
-                                        Forms\Components\select::make('status')
+                                        Forms\Components\select::make('trans_type')
+                                            ->label('Transaction Type')
                                             ->options([
                                                 'RENT' => 'RENT',
                                                 'SECURITY DEPOSIT' => 'SECURITY DEPOSIT',
@@ -86,11 +87,11 @@ class TransactionResource extends Resource
                                             ->required()
                                             ->default('RENT'),
                                         Forms\Components\TextInput::make('narration')
-                                            ->label('Reason')
+                                            ->label('Narration')
                                             ->required()
                                             ->maxLength(255),
                                         Forms\Components\FileUpload::make('cheq_img')
-                                            ->label('Attach Cheque')
+                                            ->label('Attach Cheque copy')
                                             ->acceptedFileTypes(['image/*', 'application/pdf']),
                                     ])->columns(7)
                             ])->columns(5)
