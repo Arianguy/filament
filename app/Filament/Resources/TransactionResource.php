@@ -24,7 +24,7 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Transations';
-    protected static ?string $navigationLabel = 'Cash/Cheques';
+    protected static ?string $navigationLabel = 'Cheques';
 
     public static function form(Form $form): Form
     {
@@ -71,9 +71,9 @@ class TransactionResource extends Resource
                                         Forms\Components\TextInput::make('cheqno')
                                             ->label('Cheque No')
                                             ->required(),
-                                        Forms\Components\DatePicker::make('cheqdate')
-                                            ->label('Cheque Date')
-                                            ->required(),
+                                        // Forms\Components\DatePicker::make('cheqdate')
+                                        //     ->label('Cheque Date')
+                                        //     ->required(),
                                         Forms\Components\TextInput::make('cheqamt')
                                             ->label('Cheque Amount')
                                             ->required()
@@ -117,9 +117,9 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('cheqamt')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('cheqdate')
-                    ->date()
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('cheqdate')
+                //     ->date()
+                //     ->sortable(),
                 Tables\Columns\TextColumn::make('trans_type')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('narration')
