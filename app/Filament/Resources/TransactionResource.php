@@ -71,9 +71,9 @@ class TransactionResource extends Resource
                                         Forms\Components\TextInput::make('cheqno')
                                             ->label('Cheque No')
                                             ->required(),
-                                        // Forms\Components\DatePicker::make('cheqdate')
-                                        //     ->label('Cheque Date')
-                                        //     ->required(),
+                                        Forms\Components\DatePicker::make('cheqdate')
+                                            ->label('Cheque Date')
+                                            ->required(),
                                         Forms\Components\TextInput::make('cheqamt')
                                             ->label('Cheque Amount')
                                             ->required()
@@ -117,9 +117,9 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('cheqamt')
                     ->numeric()
                     ->sortable(),
-                // Tables\Columns\TextColumn::make('cheqdate')
-                //     ->date()
-                //     ->sortable(),
+                Tables\Columns\TextColumn::make('cheqdate')
+                    ->date()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('trans_type')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('narration')
