@@ -36,17 +36,13 @@ class TransactionResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('contract_id')
                                     ->relationship('contract', 'name')
+                                    ->label('Contract No')
                                     ->native(false)
                                     ->searchable()
                                     ->preload()
                                     ->required(),
-                                Forms\Components\select::make('type')
-                                    ->options([
-                                        'CASH' => 'CASH',
-                                        'CHEQUE' => 'CHEQUE',
-                                    ])
-                                    ->default('CHEQUE')
-                                    ->disabled(),
+                                Forms\Components\Hidden::make('paytype')
+                                    ->default('CHEQUE'),
 
                                 Section::make('Payment Detail')->icon('heroicon-o-banknotes') // Payment Detail Section
                                     ->schema([
@@ -92,7 +88,13 @@ class TransactionResource extends Resource
                                             ->maxLength(255),
                                         Forms\Components\FileUpload::make('cheq_img')
                                             ->label('Attach Cheque copy')
-                                            ->acceptedFileTypes(['image/*', 'application/pdf']),
+                                            ->required()
+                                            ->directory('Cheques')
+                                            ->openable()
+                                            ->image()
+                                            ->imageEditor()
+                                            ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->downloadable(),
                                     ])->columns(7)
                             ])->columns(5)
                     ])->columnSpanFull(),
@@ -105,7 +107,7 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('contract.id')
+                Tables\Columns\TextColumn::make('contract.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('paytype')
@@ -123,15 +125,6 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('trans_type')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('narration')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('depositdate')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('cheqstatus')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('depositac')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('remarks')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cheq_img')
                     ->searchable(),

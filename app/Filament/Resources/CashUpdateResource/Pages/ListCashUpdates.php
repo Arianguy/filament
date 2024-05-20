@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\CashUpdateResource\Pages;
 
-use App\Filament\Resources\CashUpdateResource;
 use Filament\Actions;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\CashUpdateResource;
 
 class ListCashUpdates extends ListRecords
 {
@@ -15,5 +16,10 @@ class ListCashUpdates extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    protected function getTableQuery(): Builder
+    {
+        return CashUpdateResource::getEloquentQuery()->where('paytype', 'CASH');
     }
 }

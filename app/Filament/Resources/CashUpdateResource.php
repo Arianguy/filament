@@ -23,6 +23,12 @@ class CashUpdateResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Transations';
     protected static ?string $navigationLabel = 'Cash';
+
+    public static function query(): Builder
+    {
+        return parent::query()->where('paytype', 'CASH');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -33,46 +39,21 @@ class CashUpdateResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('contract_id')
                                     ->relationship('contract', 'name')
+                                    ->label('Contract No')
                                     ->native(false)
                                     ->searchable()
                                     ->preload()
                                     ->required(),
-                                Forms\Components\select::make('type')
-                                    ->options([
-                                        'CASH' => 'CASH',
-                                        'CHEQUE' => 'CHEQUE',
-                                    ])
-                                    ->default('CHEQUE')
-                                    ->disabled(),
+                                Forms\Components\Hidden::make('paytype')
+                                    ->default('CASH'),
 
-                                Section::make('Payment Detail')->icon('heroicon-o-banknotes') // Payment Detail Section
+                                Section::make('Cash Receipt Detail')->icon('heroicon-o-banknotes') // Payment Detail Section
                                     ->schema([
-                                        Forms\Components\select::make('cheqbank')
-                                            ->label('Cheque Bank Name')
-                                            ->options([
-                                                'Mashreq Bank' => 'Mashreq Bank',
-                                                'Mashreq Neo' => 'Mashreq Neo',
-                                                'Emirates NBD' => 'Emirates NBD',
-                                                'Emirates Islamic' => 'Emirates Islamic',
-                                                'FAB' => 'FAB',
-                                                'ADIB' => 'ADIB',
-                                                'ADCB' => 'ADCB',
-                                                'CBD Bank' => 'CBD',
-                                                'Dubai Islamic Bank' => 'Dubai Islamic Bank',
-                                                'RAK Bank' => 'RAK Bank',
-                                                'Online Transfer' => 'Online Transfer',
-                                            ])->native(false)
-                                            ->searchable()
-                                            ->preload()
-                                            ->required(),
-                                        Forms\Components\TextInput::make('cheqno')
-                                            ->label('Cheque No')
-                                            ->required(),
                                         Forms\Components\DatePicker::make('cheqdate')
-                                            ->label('Cheque Date')
+                                            ->label('Cash Received Date')
                                             ->required(),
                                         Forms\Components\TextInput::make('cheqamt')
-                                            ->label('Cheque Amount')
+                                            ->label('Cash Amount')
                                             ->required()
                                             ->numeric(2),
                                         Forms\Components\select::make('trans_type')
@@ -90,7 +71,7 @@ class CashUpdateResource extends Resource
                                         Forms\Components\FileUpload::make('cheq_img')
                                             ->label('Attach Cheque copy')
                                             ->acceptedFileTypes(['image/*', 'application/pdf']),
-                                    ])->columns(7)
+                                    ])->columns(5)
                             ])->columns(5)
                     ])->columnSpanFull(),
             ]);
@@ -99,8 +80,37 @@ class CashUpdateResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('contract.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('paytype')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('cheqno')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('cheqbank')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('cheqamt')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('cheqdate')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('trans_type')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('narration')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('cheq_img')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
