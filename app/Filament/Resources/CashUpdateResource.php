@@ -86,22 +86,24 @@ class CashUpdateResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('paytype')
+                    ->label('Type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('cheqno')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('cheqbank')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('cheqamt')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('cheqdate')
+                    ->label('Receipt Date')
                     ->date()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('cheqamt')
+                    ->label('Cash Amount')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('trans_type')
+                    ->label('Towards')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('narration')
+                    ->label('Narration')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cheq_img')
+                    ->label('Attachments')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
