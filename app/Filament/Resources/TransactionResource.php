@@ -7,13 +7,15 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Transaction;
-use Forms\Components\Select;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\View;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Fieldset;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
@@ -142,11 +144,46 @@ class TransactionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('edit_status')
+                    ->label('Edit Status')
+                    ->icon('heroicon-m-pencil-square')
+                    ->form([
+                        Select::make('cheqstatus')
+                            ->label('Status')
+                            ->options([
+                                'CLEARED' => 'CLEARED',
+                                'BOUNCED' => 'BOUNCED',
+                            ]),
+                        DatePicker::make('depositdate')
+                            ->label('Deposit Date')
+                            ->format('d/m/Y') // Format date to DD/MM/YYYY
+                            ->required(),
+                        TextInput::make('depositac')
+                            ->label('Deposit Account')
+                            ->default('00919875242')
+                            ->required(),
+                        Textarea::make('remarks')
+                            ->label('Remarks')
+                            ->required(),
+                    ])
+                    ->action(function ($record, $data) {
+                        // Update the fields in the database
+                        $record->update([
+                            'cheqstatus' => $data['cheqstatus'],
+                            'depositdate' => \Carbon\Carbon::createFromFormat('d/m/Y', $data['depositdate'])->format('Y-m-d'), // Format to Y-m-d for database
+                            'depositac' => $data['depositac'],
+                            'remarks' => $data['remarks'],
+                        ]);
+                        // Send a success notification
+                        Notification::make()
+                            ->title('Update Successful')
+                            ->body('The fields have been updated successfully.')
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
