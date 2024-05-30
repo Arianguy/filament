@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('trans_type');
             $table->string('narration');
             $table->date('depositdate')->nullable();
-            $table->string('cheqstatus')->nullable();
+            $table->string('cheqstatus')->nullable()->default('PENDING');
             $table->string('depositac')->nullable();
             $table->string('remarks')->nullable();
             $table->string('cheq_img')->nullable();

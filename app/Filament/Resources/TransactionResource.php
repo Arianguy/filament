@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
@@ -19,11 +20,29 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DatePicker;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
+
+class ChequeHelper
+{
+    public static function calculateRemainingDays(Transaction $Cheque): string
+    {
+        $today = Carbon::today();
+        $endDate = Carbon::parse($Cheque->cheqdate);
+
+        if ($endDate->isBefore($today)) {
+            return 'Expired';
+        } else {
+            $diffInDays = abs($endDate->diffInDays($today)); // Use abs() for absolute value
+            return number_format($diffInDays);
+        }
+    }
+}
 
 class TransactionResource extends Resource
 {
@@ -127,6 +146,22 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('cheqdate')
                     ->date()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('days_remaining')
+                    ->label('Days Balance')
+                    ->getStateUsing(function (Transaction $record) {
+                        return ChequeHelper::calculateRemainingDays($record);
+                    })
+                    ->badge()
+                    ->color(function (string $state): string {
+                        if ($state === 'Expired') {
+                            return 'danger';
+                        } elseif ($state > 30) {
+                            return 'success';
+                        } else {
+                            // Optional: Define a default color for other states
+                            return 'primary'; // Example default color
+                        }
+                    }),
                 Tables\Columns\TextColumn::make('trans_type')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('narration')
@@ -182,7 +217,7 @@ class TransactionResource extends Resource
                         // Update the fields in the database
                         $record->update([
                             'cheqstatus' => $data['cheqstatus'],
-                            'depositdate' => \Carbon\Carbon::createFromFormat('d/m/Y', $data['depositdate'])->format('Y-m-d'), // Format to Y-m-d for database
+                            'depositdate' => Carbon::createFromFormat('d/m/Y', $data['depositdate'])->format('Y-m-d'), // Format to Y-m-d for database
                             'depositac' => $data['depositac'],
                             'remarks' => $data['remarks'],
                         ]);
@@ -203,27 +238,62 @@ class TransactionResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('cheqstatus')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'CLEARED' => 'success',
-                        'BOUNCED' => 'danger',
-                    }),
-                TextEntry::make('created_at')
-                    ->label('Created at : ')
-                    ->dateTime('d-M-Y')
-                    ->color('gray'),
-                TextEntry::make('cheqamt')
-                    ->numeric(2)
-                    ->money('AED')
-                    ->weight(FontWeight::Bold),
-                ImageEntry::make('cheq_img')
-                    ->width(600)
-                    ->height(300)
-                    // ->size(500)
-                    ->columnSpan(2),
+                Fieldset::make('Cheque Details ')
+                    ->schema([
+                        TextEntry::make('contract.name')
+                            ->label('Contract No:'),
+                        TextEntry::make('contract.property.name')
+                            ->label('Property Name:'),
+                        TextEntry::make('break')
+                            ->label(' ') // An empty label or any text can act as a break
+                            ->columnSpanFull(), // Ensures it takes a full width break
+                        TextEntry::make('contract.tenant.fname')
+                            ->label('Tenant Name: ')
+                            ->weight(FontWeight::Bold),
+                        TextEntry::make('cheqstatus')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'CLEARED' => 'success',
+                                'BOUNCED' => 'danger',
+                                'PENDING' => 'info',
+                            }),
 
-            ])->columns(4);
+                        TextEntry::make('cheqdate')
+                            ->label('Cheque Date : ')
+                            ->dateTime('d-M-Y')
+                            ->weight(FontWeight::Bold),
+                        //    ->color('gray'),
+                        TextEntry::make('cheqamt')
+                            ->label('Cheque Amount :')
+                            ->numeric(2)
+                            ->money('AED')
+                            ->weight(FontWeight::Bold),
+
+                        TextEntry::make('days_remaining')
+                            ->label('Days Balance')
+                            ->getStateUsing(function (Transaction $record) {
+                                return ChequeHelper::calculateRemainingDays($record);
+                            })
+                            ->badge()
+                            ->color(function (string $state): string {
+                                if ($state === 'Expired') {
+                                    return 'danger';
+                                } elseif ($state > 30) {
+                                    return 'success';
+                                } else {
+                                    // Optional: Define a default color for other states
+                                    return 'primary'; // Example default color
+                                }
+                            }),
+
+                        // ImageEntry::make('cheq_img')
+                        //     ->width(600)
+                        //     ->height(300)
+                        //     // ->size(500)
+                        //     ->columnSpan(2),
+
+                    ]),
+            ])->columns(2);
     }
     public static function getRelations(): array
     {
