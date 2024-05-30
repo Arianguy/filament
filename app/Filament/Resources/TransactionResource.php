@@ -7,15 +7,20 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Transaction;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Grid;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Support\Enums\FontWeight;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DatePicker;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ImageEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
@@ -103,8 +108,6 @@ class TransactionResource extends Resource
             ]);
     }
 
-
-
     public static function table(Table $table): Table
     {
         return $table
@@ -128,8 +131,8 @@ class TransactionResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('narration')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('cheq_img')
-                    ->searchable(),
+                //Tables\Columns\TextColumn::make('cheq_img')
+                //   ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -143,28 +146,37 @@ class TransactionResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Action::make('edit_status')
-                    ->label('Edit Status')
+                    ->label('Clear Cheque')
                     ->icon('heroicon-m-pencil-square')
                     ->form([
-                        Select::make('cheqstatus')
-                            ->label('Status')
-                            ->options([
-                                'CLEARED' => 'CLEARED',
-                                'BOUNCED' => 'BOUNCED',
+                        Grid::make(6)
+                            ->schema([
+                                Select::make('cheqstatus')
+                                    ->label('Status')
+                                    ->required()
+                                    ->options([
+                                        'CLEARED' => 'CLEARED',
+                                        'BOUNCED' => 'BOUNCED',
+                                    ])
+                                    ->columnSpan(2),
+                                DatePicker::make('depositdate')
+                                    ->label('Deposit Date')
+                                    ->format('d/m/Y') // Format date to DD/MM/YYYY
+                                    ->required()
+                                    ->columnSpan(2),
+                                TextInput::make('depositac')
+                                    ->label('Deposit Account')
+                                    ->default('00919875242')
+                                    ->required()
+                                    ->columnSpan(2),
+                                Textarea::make('remarks')
+                                    ->label('Remarks')
+                                    ->required()
+                                    ->columnSpan(6),
                             ]),
-                        DatePicker::make('depositdate')
-                            ->label('Deposit Date')
-                            ->format('d/m/Y') // Format date to DD/MM/YYYY
-                            ->required(),
-                        TextInput::make('depositac')
-                            ->label('Deposit Account')
-                            ->default('00919875242')
-                            ->required(),
-                        Textarea::make('remarks')
-                            ->label('Remarks')
-                            ->required(),
                     ])
                     ->action(function ($record, $data) {
                         // Update the fields in the database
@@ -187,6 +199,32 @@ class TransactionResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('cheqstatus')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'CLEARED' => 'success',
+                        'BOUNCED' => 'danger',
+                    }),
+                TextEntry::make('created_at')
+                    ->label('Created at : ')
+                    ->dateTime('d-M-Y')
+                    ->color('gray'),
+                TextEntry::make('cheqamt')
+                    ->numeric(2)
+                    ->money('AED')
+                    ->weight(FontWeight::Bold),
+                ImageEntry::make('cheq_img')
+                    ->width(600)
+                    ->height(300)
+                    // ->size(500)
+                    ->columnSpan(2),
+
+            ])->columns(4);
+    }
     public static function getRelations(): array
     {
         return [
