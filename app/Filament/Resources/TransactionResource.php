@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
 
+
 class ChequeHelper
 {
     public static function calculateRemainingDays(Transaction $Cheque): string
@@ -238,25 +239,27 @@ class TransactionResource extends Resource
     {
         return $infolist
             ->schema([
-                Fieldset::make('Cheque Details ')
+                Fieldset::make('  ')
                     ->schema([
                         TextEntry::make('contract.name')
                             ->label('Contract No:'),
                         TextEntry::make('contract.property.name')
                             ->label('Property Name:'),
+                        TextEntry::make('contract.property.owner.name')
+                            ->label('Property Owner:'),
                         TextEntry::make('break')
                             ->label(' ') // An empty label or any text can act as a break
                             ->columnSpanFull(), // Ensures it takes a full width break
                         TextEntry::make('contract.tenant.fname')
                             ->label('Tenant Name: ')
                             ->weight(FontWeight::Bold),
-                        TextEntry::make('cheqstatus')
-                            ->badge()
-                            ->color(fn (string $state): string => match ($state) {
-                                'CLEARED' => 'success',
-                                'BOUNCED' => 'danger',
-                                'PENDING' => 'info',
-                            }),
+                        TextEntry::make('contract.tenant.mobile')
+                            ->label('Tenant Mobile: ')
+                            ->weight(FontWeight::Bold),
+                        TextEntry::make('contract.tenant.email')
+                            ->label('Tenant Email: ')
+                            ->weight(FontWeight::Bold),
+
 
                         TextEntry::make('cheqdate')
                             ->label('Cheque Date : ')
@@ -267,6 +270,9 @@ class TransactionResource extends Resource
                             ->label('Cheque Amount :')
                             ->numeric(2)
                             ->money('AED')
+                            ->weight(FontWeight::Bold),
+                        TextEntry::make('cheqbank')
+                            ->label('Bank:')
                             ->weight(FontWeight::Bold),
 
                         TextEntry::make('days_remaining')
@@ -285,15 +291,24 @@ class TransactionResource extends Resource
                                     return 'primary'; // Example default color
                                 }
                             }),
+                        TextEntry::make('cheqstatus')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'CLEARED' => 'success',
+                                'BOUNCED' => 'danger',
+                                'PENDING' => 'info',
+                            }),
 
+                        TextEntry::make('narration')
+                            ->label('Narration:')
+                            ->weight(FontWeight::Thin),
                         // ImageEntry::make('cheq_img')
                         //     ->width(600)
                         //     ->height(300)
                         //     // ->size(500)
                         //     ->columnSpan(2),
-
-                    ]),
-            ])->columns(2);
+                    ])->columns(3),
+            ])->columns(4);
     }
     public static function getRelations(): array
     {
