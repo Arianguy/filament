@@ -70,8 +70,15 @@ class PropertyResource extends Resource
                                             ->required()
                                             ->label('Purchase Value')
                                             ->numeric(),
-                                        FileUpload::make('salesdeed')->label('Attach Sales deed')
+                                        FileUpload::make('salesdeed')
+                                            ->label('Attach Sales deed')
+                                            ->required()
+                                            ->directory('titledeeds')
+                                            //->multiple()
+                                            ->image()
+                                            ->imageEditor()
                                             ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                            ->downloadable(),
                                     ])->columns(5),
 
                                 Section::make('Property Detail')->icon('heroicon-o-identification') // Property Detail Section

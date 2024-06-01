@@ -239,7 +239,7 @@ class TransactionResource extends Resource
     {
         return $infolist
             ->schema([
-                Fieldset::make('  ')
+                Fieldset::make('')
                     ->schema([
                         TextEntry::make('contract.name')
                             ->label('Contract No:'),
@@ -247,9 +247,9 @@ class TransactionResource extends Resource
                             ->label('Property Name:'),
                         TextEntry::make('contract.property.owner.name')
                             ->label('Property Owner:'),
-                        TextEntry::make('break')
-                            ->label(' ') // An empty label or any text can act as a break
-                            ->columnSpanFull(), // Ensures it takes a full width break
+                        // TextEntry::make('break')
+                        //     ->label(' ') // An empty label or any text can act as a break
+                        //     ->columnSpanFull(), // Ensures it takes a full width break
                         TextEntry::make('contract.tenant.fname')
                             ->label('Tenant Name: ')
                             ->weight(FontWeight::Bold),
@@ -259,8 +259,6 @@ class TransactionResource extends Resource
                         TextEntry::make('contract.tenant.email')
                             ->label('Tenant Email: ')
                             ->weight(FontWeight::Bold),
-
-
                         TextEntry::make('cheqdate')
                             ->label('Cheque Date : ')
                             ->dateTime('d-M-Y')
@@ -302,13 +300,13 @@ class TransactionResource extends Resource
                         TextEntry::make('narration')
                             ->label('Narration:')
                             ->weight(FontWeight::Thin),
-                        // ImageEntry::make('cheq_img')
-                        //     ->width(600)
-                        //     ->height(300)
-                        //     // ->size(500)
-                        //     ->columnSpan(2),
+                        ImageEntry::make('cheq_img')
+                            ->width(600)
+                            ->height(300)
+                            // ->size(500)
+                            ->columnSpan(2),
                     ])->columns(3),
-            ])->columns(4);
+            ])->columns(3);
     }
     public static function getRelations(): array
     {

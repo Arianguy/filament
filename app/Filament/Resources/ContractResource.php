@@ -69,6 +69,7 @@ class ContractResource extends Resource
                                             ->native(false)
                                             ->required(),
                                         Forms\Components\Select::make('property_id')
+                                            ->relationship('property', 'name')
                                             ->options($vacantProperties) // Use the filtered options array
                                             // ->relationship('Property', 'name')
                                             ->native(false)
@@ -108,6 +109,7 @@ class ContractResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Contract No')
                     ->sortable()
@@ -159,7 +161,7 @@ class ContractResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->recordUrl(null)
+            //->recordUrl(null)
             ->filters([
                 //
             ])
