@@ -20,7 +20,7 @@ class CashUpdateResource extends Resource
 {
     protected static ?string $model = Transaction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationGroup = 'Transations';
     protected static ?string $navigationLabel = 'Cash';
 

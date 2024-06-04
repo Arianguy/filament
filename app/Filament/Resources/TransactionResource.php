@@ -20,6 +20,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\TextEntry;
@@ -37,7 +38,7 @@ class ChequeHelper
         $endDate = Carbon::parse($Cheque->cheqdate);
 
         if ($endDate->isBefore($today)) {
-            return 'Expired';
+            return 'Past Due';
         } else {
             $diffInDays = abs($endDate->diffInDays($today)); // Use abs() for absolute value
             return number_format($diffInDays);
@@ -49,7 +50,7 @@ class TransactionResource extends Resource
 {
     protected static ?string $model = Transaction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?string $navigationGroup = 'Transations';
     protected static ?string $navigationLabel = 'Cheques';
 
@@ -134,7 +135,8 @@ class TransactionResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('contract.name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('paytype')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cheqno')
@@ -154,7 +156,7 @@ class TransactionResource extends Resource
                     })
                     ->badge()
                     ->color(function (string $state): string {
-                        if ($state === 'Expired') {
+                        if ($state === 'Past Due') {
                             return 'danger';
                         } elseif ($state > 30) {
                             return 'success';
@@ -164,7 +166,8 @@ class TransactionResource extends Resource
                         }
                     }),
                 Tables\Columns\TextColumn::make('trans_type')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('narration')
                     ->searchable(),
                 //Tables\Columns\TextColumn::make('cheq_img')
@@ -179,7 +182,11 @@ class TransactionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('contract')
+                    ->relationship('contract', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->indicator('Contract '),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -280,7 +287,7 @@ class TransactionResource extends Resource
                             })
                             ->badge()
                             ->color(function (string $state): string {
-                                if ($state === 'Expired') {
+                                if ($state === 'Past Due') {
                                     return 'danger';
                                 } elseif ($state > 30) {
                                     return 'success';

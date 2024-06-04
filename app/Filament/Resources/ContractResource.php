@@ -34,7 +34,7 @@ class ContractHelper
 class ContractResource extends Resource
 {
     protected static ?string $model = Contract::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-swatch';
     protected static ?string $navigationGroup = 'Transations';
     protected static ?string $navigationLabel = 'Contracts';
 
@@ -46,7 +46,6 @@ class ContractResource extends Resource
             ->schema([
                 Group::make()   // Grouping
                     ->schema([
-
                         Section::make() // Section
                             ->schema([
                                 Forms\Components\TextInput::make('name')
@@ -63,33 +62,46 @@ class ContractResource extends Resource
                                 Section::make() // Section
                                     ->schema([
                                         Forms\Components\Select::make('tenant_id')
+                                            ->label('Tenant Name')
                                             ->relationship('Tenant', 'fname')
                                             ->searchable()
                                             ->preload()
                                             ->native(false)
                                             ->required(),
                                         Forms\Components\Select::make('property_id')
+                                            ->label('Property Name')
                                             ->relationship('property', 'name')
                                             ->options($vacantProperties) // Use the filtered options array
                                             // ->relationship('Property', 'name')
                                             ->native(false)
                                             ->required(),
                                         Forms\Components\DatePicker::make('cstart')
+                                            ->label('Start Date')
                                             ->required(),
                                         Forms\Components\DatePicker::make('cend')
+                                            ->label('End Date')
                                             ->required(),
                                         Forms\Components\TextInput::make('amount')
+                                            ->label('Rent Amount')
                                             ->required()
-                                            ->numeric(),
+                                            ->numeric(2),
                                         Forms\Components\TextInput::make('sec_amt')
+                                            ->label('Security Deposite')
                                             ->required()
                                             ->numeric(),
                                         Forms\Components\TextInput::make('ejari')
                                             ->required()
                                             ->maxLength(255),
-                                        Forms\Components\TextInput::make('validity')
-                                            ->required()
-                                            ->maxLength(255),
+                                        Forms\Components\select::make('validity')
+                                            ->options([
+                                                'Y' => 'ACTIVE',
+                                                'N' => 'EXPIRED',
+                                                'C' => 'CANCELLED',
+                                            ])->native(false)
+                                            ->required(),
+                                        // Forms\Components\TextInput::make('validity')
+                                        //     ->required()
+                                        //     ->maxLength(255),
                                         Forms\Components\FileUpload::make('contract_img')->label('Attach Contract Copy')
                                             ->required()
                                             ->directory('Contracts')
