@@ -19,6 +19,7 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -133,14 +134,16 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('contract.name')
                     ->numeric()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('paytype')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('cheqno')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('cheqno'),
                 Tables\Columns\TextColumn::make('cheqbank')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cheqamt')
@@ -187,7 +190,8 @@ class TransactionResource extends Resource
                     ->searchable()
                     ->preload()
                     ->indicator('Contract '),
-            ])
+            ], layout: FiltersLayout::Modal)
+
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

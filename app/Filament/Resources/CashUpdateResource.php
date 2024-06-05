@@ -84,10 +84,10 @@ class CashUpdateResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('contract.name')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('paytype')
-                    ->label('Type')
+                    ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('paytype')
+                    ->label('Type'),
                 Tables\Columns\TextColumn::make('cheqdate')
                     ->label('Receipt Date')
                     ->date()
