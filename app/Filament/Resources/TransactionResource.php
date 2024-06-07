@@ -183,7 +183,7 @@ class TransactionResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('cheqdate', 'asc')
             ->filters([
                 SelectFilter::make('contract')
                     ->relationship('contract', 'name')
@@ -216,7 +216,7 @@ class TransactionResource extends Resource
                                     ->columnSpan(2),
                                 TextInput::make('depositac')
                                     ->label('Deposit Account')
-                                    ->default('00919875242')
+                                    ->default('019100503669')
                                     ->required()
                                     ->columnSpan(2),
                                 Textarea::make('remarks')
