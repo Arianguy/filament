@@ -127,7 +127,8 @@ class ContractResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tenant.fname')
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(30),
                 Tables\Columns\TextColumn::make('property.name')
                     ->sortable()
                     ->searchable(),
@@ -162,8 +163,8 @@ class ContractResource extends Resource
                             return 'primary'; // Example default color
                         }
                     }),
-                Tables\Columns\TextColumn::make('contract_img')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('contract_img')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -172,7 +173,7 @@ class ContractResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('cend', 'asc')
             //->recordUrl(null)
             ->filters([
                 //

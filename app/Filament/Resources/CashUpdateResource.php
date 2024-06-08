@@ -102,9 +102,9 @@ class CashUpdateResource extends Resource
                 Tables\Columns\TextColumn::make('narration')
                     ->label('Narration')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('cheq_img')
-                    ->label('Attachments')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('cheq_img')
+                //     ->label('Attachments')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
