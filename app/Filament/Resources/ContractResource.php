@@ -96,6 +96,7 @@ class ContractResource extends Resource
                                             ->options([
                                                 'Y' => 'ACTIVE',
                                                 'N' => 'EXPIRED',
+                                                'R' => 'RENEWED',
                                                 'C' => 'CANCELLED',
                                             ])->native(false)
                                             ->required(),
@@ -128,6 +129,7 @@ class ContractResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tenant.fname')
                     ->sortable()
+                    ->searchable()
                     ->limit(30),
                 Tables\Columns\TextColumn::make('property.name')
                     ->sortable()
