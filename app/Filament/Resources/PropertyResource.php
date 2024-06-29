@@ -171,6 +171,11 @@ class PropertyResource extends Resource
                 TextColumn::make('owner.name')->label('Owner'), // Access owner's name through the relationship
                 TextColumn::make('status')
                     ->badge()
+                    ->icon(fn (string $state): ?string => match ($state) {
+                        'LEASED' => 'heroicon-s-check-badge',
+                        'VACANT' => 'heroicon-o-exclamation-circle',
+                        'SOLD' => 'heroicon-o-x-circle',
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'LEASED' => 'success',
                         'VACANT' => 'warning',

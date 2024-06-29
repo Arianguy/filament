@@ -32,9 +32,9 @@ class ListContracts extends ListRecords
                 ->badgeColor('info'),
             'Valid' => Tab::make()
                 ->modifyQueryUsing(function ($query) {
-                    $query->where('validity', 'Y');
+                    $query->whereIn('validity', ['Y', 'R']);
                 })
-                ->badge(Contract::query()->where('validity', 'Y')->count())
+                ->badge(Contract::query()->whereIn('validity', ['Y', 'R'])->count())
                 ->badgeColor('success'),
         ];
     }
