@@ -116,6 +116,7 @@ class PropertyResource extends Resource
                                                         'Fourth Floor' => 'Fourth Floor',
                                                         'Ten Floor' => 'Ten Floor',
                                                         'Eleven Floor' => 'Eleven Floor',
+                                                        'Twenty Five Floor' => 'Twenty Five Floor',
                                                     ])->native(false)
                                                     ->required(),
                                                 TextInput::make('suite_area')
@@ -169,7 +170,7 @@ class PropertyResource extends Resource
                 TextColumn::make('purchase_date')->label('Purchase Date')->date()->sortable(),
                 TextColumn::make('purchase_value')->sortable()->Toggleable(),
                 TextColumn::make('owner.name')->label('Owner'), // Access owner's name through the relationship
-                TextColumn::make('status')
+                TextColumn::make('status')->sortable()
                     ->badge()
                     ->icon(fn (string $state): ?string => match ($state) {
                         'LEASED' => 'heroicon-s-check-badge',

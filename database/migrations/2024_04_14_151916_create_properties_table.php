@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('plot_no');
             $table->unsignedBigInteger('bldg_no');
             $table->string('bldg_name');
-            $table->unsignedBigInteger('property_no');
+            $table->string('property_no');
             $table->string('floor_detail');
             $table->decimal('suite_area', 10, 2);
             $table->decimal('balcony_area', 10, 2);
