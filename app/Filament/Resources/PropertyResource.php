@@ -94,7 +94,7 @@ class PropertyResource extends Resource
                                             ->required(),
                                         select::make('type')
                                             ->options([
-                                                'Residencial' => 'Residencial',
+                                                'Residencial' => 'Residential',
                                                 'Comercial' => 'Commercial',
                                             ])->native(false)
                                             ->required(),
